@@ -14,4 +14,22 @@ class ShanyrakRepository:
         return insert_result.inserted_id
 
     def get_shanyrak(self, shanyrak_id: str):
-        return self.database["shanyraks"].find_one({"_id": ObjectId(shanyrak_id)})
+        shanyraks = self.database["shanyraks"]
+        shanyrak = shanyraks.find_one({"_id": ObjectId(shanyrak_id)})
+        return shanyrak
+        # hardcode but flake8...
+
+    def update_shanyrak(self, shanyrak_id: str, data: dict):
+        self.database["shanyraks"].update_one(
+            filter={"_id": ObjectId(shanyrak_id)},
+            update={
+                "$set": {
+                    "type": data["type"],
+                    "price": data["price"],
+                    "address": data["address"],
+                    "area": data["area"],
+                    "rooms_count": data["rooms_count"],
+                    "description": data["description"],
+                }
+            },
+        )

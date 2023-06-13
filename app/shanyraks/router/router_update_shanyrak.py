@@ -24,7 +24,7 @@ class UpdateShanyraqResponse(AppModel):
 
 
 @router.patch("/{shanyrak_id:str}")
-def get_shanyrak(
+def update_shanyrak(
     shanyrak_id: str,
     input: UpdateShanyraqResponse,
     jwt_data: JWTData = Depends(parse_jwt_user_data),
