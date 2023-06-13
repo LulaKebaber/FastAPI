@@ -1,8 +1,4 @@
-from typing import Any
-
 from fastapi import Depends, Response
-from pydantic import Field
-
 
 from app.utils import AppModel
 
@@ -14,7 +10,7 @@ from ..service import Service, get_service
 from . import router
 
 
-class UpdateShanyraqResponse(AppModel):
+class UpdateShanyrakResponse(AppModel):
     type: str
     price: int
     address: str
@@ -26,11 +22,13 @@ class UpdateShanyraqResponse(AppModel):
 @router.patch("/{shanyrak_id:str}")
 def update_shanyrak(
     shanyrak_id: str,
-    input: UpdateShanyraqResponse,
+    input: UpdateShanyrakResponse,
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> dict[str, str]:
-    shanyrak = svc.repository.update_shanyrak(shanyrak_id, input.dict())
-    if shanyrak is None:
-        return Response(status_code=404)
-    return UpdateShanyraqResponse(**shanyrak)
+    shanyrak_updated = svc.repository.update_shanyrak(
+        shanyrak_id, jwt_data.user_id, input.dict()
+    )
+    if shanyrak_updated.modified_count == 1:
+        return Response(status_code=200)
+    return Response(status_code=404)

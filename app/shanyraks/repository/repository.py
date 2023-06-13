@@ -2,6 +2,7 @@ from typing import Any
 
 from bson.objectid import ObjectId
 from pymongo.database import Database
+from pymongo.results import UpdateResult
 
 
 class ShanyrakRepository:
@@ -19,17 +20,10 @@ class ShanyrakRepository:
         return shanyrak
         # hardcode but flake8...
 
-    def update_shanyrak(self, shanyrak_id: str, data: dict):
-        self.database["shanyraks"].update_one(
-            filter={"_id": ObjectId(shanyrak_id)},
-            update={
-                "$set": {
-                    "type": data["type"],
-                    "price": data["price"],
-                    "address": data["address"],
-                    "area": data["area"],
-                    "rooms_count": data["rooms_count"],
-                    "description": data["description"],
-                }
-            },
+    def update_shanyrak(
+        self, shanyrak_id: str, user_id: str, data: dict[str, Any]
+    ) -> UpdateResult:
+        return self.database["shanyraks"].update_one(
+            filter={"_id": ObjectId(shanyrak_id), "user_id": ObjectId(user_id)},
+            update={"$set": data},
         )
