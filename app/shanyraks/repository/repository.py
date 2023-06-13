@@ -12,3 +12,6 @@ class ShanyrakRepository:
         data["user_id"] = ObjectId(user_id)
         insert_result = self.database["shanyraks"].insert_one(data)
         return insert_result.inserted_id
+
+    def get_shanyrak(self, shanyrak_id: str):
+        return self.database["shanyraks"].find_one({"_id": ObjectId(shanyrak_id)})
