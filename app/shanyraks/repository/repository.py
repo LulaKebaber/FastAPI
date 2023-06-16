@@ -32,12 +32,3 @@ class ShanyrakRepository:
         return self.database["shanyraks"].delete_one(
             {"_id": ObjectId(shanyrak_id), "user_id": ObjectId(user_id)}
         )
-
-    # def get_shanyrak_photos(self, shanyrak_id: str):
-    #     shanyraks = self.database["database"]
-    #     media_url = []
-
-    #     for photo in shanyraks["media"]:
-    #         media_url.append(shanyraks.find_one({"media": photo}))
-
-    #     return media_url
