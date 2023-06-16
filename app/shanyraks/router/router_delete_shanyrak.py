@@ -1,7 +1,5 @@
 from fastapi import Depends, Response
 
-from app.utils import AppModel
-
 from app.auth.adapters.jwt_service import JWTData
 from app.auth.router.dependencies import parse_jwt_user_data
 

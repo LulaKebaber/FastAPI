@@ -31,7 +31,8 @@ def get_shanyrak(
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> dict[str, str]:
-    shanyrak = svc.repository.get_shanyrak(shanyrak_id)
+    shanyrak = svc.repository.get_shanyrak(shanyrak_id, jwt_data.user_id)
+    # photos = svc.repository.get_shanyrak_photos()
     if shanyrak is None:
         return Response(status_code=404)
     return GetShanyrakResponse(**shanyrak)
