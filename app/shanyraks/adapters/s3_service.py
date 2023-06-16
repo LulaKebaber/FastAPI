@@ -20,3 +20,9 @@ class S3Service:
         )
 
         return object_url
+    
+    def delete_file(self, photo: str):
+        bucket = "danial-baizak-bucket"
+        filekey = f"shanyraks/{photo}"
+        self.s3.delete_object(bucket, filekey)
+
