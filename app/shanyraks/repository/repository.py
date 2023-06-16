@@ -14,9 +14,9 @@ class ShanyrakRepository:
         insert_result = self.database["shanyraks"].insert_one(data)
         return insert_result.inserted_id
 
-    def get_shanyrak(self, shanyrak_id: str):
+    def get_shanyrak(self, shanyrak_id: str, user_id: str):
         shanyraks = self.database["shanyraks"]
-        shanyrak = shanyraks.find_one({"_id": ObjectId(shanyrak_id)})
+        shanyrak = shanyraks.find_one({"_id": ObjectId(shanyrak_id), "user_id": ObjectId(user_id)})
         return shanyrak
         # hardcode but flake8...
 
@@ -32,3 +32,12 @@ class ShanyrakRepository:
         return self.database["shanyraks"].delete_one(
             {"_id": ObjectId(shanyrak_id), "user_id": ObjectId(user_id)}
         )
+
+    # def get_shanyrak_photos(self, shanyrak_id: str):
+    #     shanyraks = self.database["database"]
+    #     media_url = []
+
+    #     for photo in shanyraks["media"]:
+    #         media_url.append(shanyraks.find_one({"media": photo}))
+
+    #     return media_url
