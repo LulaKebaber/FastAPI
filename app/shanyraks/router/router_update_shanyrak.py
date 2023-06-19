@@ -20,6 +20,7 @@ class UpdateShanyrakResponse(AppModel):
     rooms_count: int
     description: str
 
+
 class DeletePhotoRequest(AppModel):
     media: list
 
@@ -46,18 +47,22 @@ def upload_shanyrak_photos(
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> Any:
-    
     media_urls = []
 
     for file in files:
         url = svc.s3_service.upload_file(file.file, file.filename)
         media_urls.append(url)
-    
-    update_result = svc.repository.update_shanyrak(shanyrak_id, jwt_data.user_id, data={"media": media_urls})
-    
+
+    update_result = svc.repository.update_shanyrak(
+        shanyrak_id, jwt_data.user_id, data={"media": media_urls}
+    )
+
     if update_result.acknowledged:
         return media_urls
-    raise HTTPException(status_code=404, detail=f"Error occured while updating shanyrak {shanyrak_id}")
+    raise HTTPException(
+        status_code=404, detail=f"Error occured while updating shanyrak {shanyrak_id}"
+    )
+
 
 @router.delete("/{shanyrak_id:str}/media")
 def delete_shanyrak_photos(
@@ -66,18 +71,20 @@ def delete_shanyrak_photos(
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> Any:
-    
-    shanyrak = svc.repository.get_shanyrak(shanyrak_id=shanyrak_id, user_id=jwt_data.user_id)
+    shanyrak = svc.repository.get_shanyrak(
+        shanyrak_id=shanyrak_id, user_id=jwt_data.user_id
+    )
     media = shanyrak["media"]
     for file in input:
         svc.s3_service.delete_file(file.filename)
         del media[f"{file.filename}"]
 
-    update_result = svc.repository.update_shanyrak(shanyrak_id, jwt_data.user_id, data={"media": media})
+    update_result = svc.repository.update_shanyrak(
+        shanyrak_id, jwt_data.user_id, data={"media": media}
+    )
     if not update_result.acknowledged:
-        raise HTTPException(status_code=404, detail=f"Error occured while deleting photos from shanyrak {shanyrak}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Error occured while deleting photos from shanyrak {shanyrak}",
+        )
     return Response(status_code=200)
-
-    
-
-        
